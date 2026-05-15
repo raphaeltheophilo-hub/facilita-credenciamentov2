@@ -1,5 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
-import { supabase } from './supabase.js'
+import { createClient } from '@supabase/supabase-client'
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+const supabase = createClient(supabaseUrl, supabaseKey)
 
 /* ─── Lista de municípios ─────────────────────────────────────────────────── */
 const MUNICIPIOS = [
