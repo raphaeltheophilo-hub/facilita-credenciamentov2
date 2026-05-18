@@ -194,7 +194,7 @@ export default function App() {
   const tryAdmin=()=>{if(adminPwd===ADMIN_PASS){setSV('admin');setAE(false)}else setAE(true)}
 
   const exportCSV=()=>{
-    const bom='\uFEFF',hdr=['Município','Nome','CPF/RG','Cargo','WhatsApp','E-mail','Horário'].join(';')
+    const bom='\uFEFF',hdr=['Município','Nome','CPF','Cargo','WhatsApp','E-mail','Horário'].join(';')
     const rows=creds.map(r=>[`"${r.municipio}"`,`"${r.nome}"`,`"${r.documento}"`,`"${r.cargo}"`,`"${r.telefone||''}"`,`"${r.email||''}"`,`"${new Date(r.created_at).toLocaleString('pt-BR')}"`].join(';'))
     const csv=bom+[hdr,...rows].join('\n'),url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}))
     const a=Object.assign(document.createElement('a'),{href:url,download:'credenciamento_facilita_sp.csv'})
@@ -255,11 +255,47 @@ export default function App() {
             <input value={nome} onChange={e=>setNome(e.target.value)} placeholder="Nome completo" style={S.inp} autoFocus/>
           </div>
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px',marginBottom:'14px'}}>
-            <div><label style={S.label}>CPF ou RG *</label><input value={doc} onChange={e=>setDoc(e.target.value)} placeholder="000.000.000-00" style={S.inp}/></div>
+            <div><label style={S.label}>CPF *</label><input
+              value={doc}
+              onChange={e=>{
+                let v=e.target.value.replace(/\D/g,'')
+                v=v.slice(0,11)
+
+                if(v.length>9){
+                  v=v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/,'$1.$2.$3-$4')
+                }else if(v.length>6){
+                  v=v.replace(/(\d{3})(\d{3})(\d{1,3})/,'$1.$2.$3')
+                }else if(v.length>3){
+                  v=v.replace(/(\d{3})(\d{1,3})/,'$1.$2')
+                }
+
+                setDoc(v)
+              }}
+              placeholder="000.000.000-00"
+              style={S.inp}
+              inputMode="numeric"
+            /></div>
             <div><label style={S.label}>Cargo *</label><input value={cargo} onChange={e=>setCargo(e.target.value)} placeholder="Ex: Prefeito" style={S.inp}/></div>
           </div>
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px',marginBottom:'14px'}}>
-            <div><label style={S.label}>WhatsApp *</label><input value={telefone} onChange={e=>setTelefone(e.target.value)} placeholder="(11) 99999-9999" style={S.inp}/></div>
+            <div><label style={S.label}>WhatsApp *</label><input
+                value={telefone}
+                onChange={e=>{
+                  let v=e.target.value.replace(/\D/g,'')
+                  v=v.slice(0,11)
+
+                  if(v.length>6){
+                    v=v.replace(/(\d{2})(\d{5})(\d{1,4})/,'($1) $2-$3')
+                  }else if(v.length>2){
+                    v=v.replace(/(\d{2})(\d{1,5})/,'($1) $2')
+                  }
+
+                  setTelefone(v)
+                }}
+                placeholder="(11) 99999-9999"
+                style={S.inp}
+                inputMode="numeric"
+              /></div>
             <div><label style={S.label}>E-mail *</label><input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="email@prefeitura.sp.gov.br" style={S.inp}/></div>
           </div>
           <div>
@@ -376,7 +412,7 @@ export default function App() {
             <div style={{background:C.white,borderRadius:'10px',border:`1px solid ${C.border}`,overflow:'hidden'}}>
               <div style={{overflowX:'auto'}}>
                 <table style={{width:'100%',borderCollapse:'collapse',fontSize:'13px',tableLayout:'fixed'}}>
-                  <thead><tr style={{background:C.gray50}}>{[['Município','16%'],['Nome','18%'],['CPF/RG','12%'],['Cargo','14%'],['WhatsApp','13%'],['E-mail','17%'],['Horário','6%'],['Ass.','4%']].map(([h,w])=>(
+                  <thead><tr style={{background:C.gray50}}>{[['Município','16%'],['Nome','18%'],['CPF','12%'],['Cargo','14%'],['WhatsApp','13%'],['E-mail','17%'],['Horário','6%'],['Ass.','4%']].map(([h,w])=>(
                     <th key={h} style={{padding:'10px 12px',textAlign:'left',fontWeight:'700',color:C.gray500,borderBottom:`1px solid ${C.border}`,width:w,fontSize:'11px',textTransform:'uppercase',letterSpacing:'0.04em'}}>{h}</th>
                   ))}</tr></thead>
                   <tbody>{filtC.map((r,i)=>(
