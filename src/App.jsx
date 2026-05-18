@@ -167,7 +167,7 @@ export default function App() {
   },[])
 
   const norm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase()
-  const isCred=m=>creds.some(r=>r.municipio===m)
+  const isCred = m => false
   const filtered=MUNICIPIOS.filter(m=>norm(m).includes(norm(search)))
   const pendentes=MUNICIPIOS.filter(m=>!isCred(m))
 
