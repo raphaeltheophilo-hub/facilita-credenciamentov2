@@ -4,14 +4,18 @@ const resend = new Resend(process.env.RESEND_API_KEY)
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método não permitido' })
+    return res.status(405).json({
+      error: 'Método não permitido'
+    })
   }
 
   try {
     const { nome, email, municipio, cargo } = req.body
 
     if (!nome || !email || !municipio) {
-      return res.status(400).json({ error: 'Dados obrigatórios ausentes' })
+      return res.status(400).json({
+        error: 'Nome, e-mail e município são obrigatórios.'
+      })
     }
 
     const result = await resend.emails.send({
@@ -19,22 +23,42 @@ export default async function handler(req, res) {
       to: [email],
       subject: 'Confirmação de credenciamento - Facilita SP Municípios',
       html: `
-        <p>Olá, <strong>${nome}</strong>.</p>
+        <div style="font-family: Arial, sans-serif; color: #222; line-height: 1.5;">
+          <h2>Credenciamento confirmado</h2>
 
-        <p>Seu credenciamento para o evento <strong>Facilita SP Municípios</strong> foi confirmado com sucesso.</p>
+          <p>Olá, <strong>${nome}</strong>.</p>
 
-        <p><strong>Município:</strong> ${municipio}</p>
-        <p><strong>Cargo:</strong> ${cargo || '-'}</p>
+          <p>
+            Seu credenciamento para o evento
+            <strong>Facilita SP Municípios</strong>
+            foi confirmado com sucesso.
+          </p>
 
-        <p>Guarde esta mensagem como comprovante de confirmação.</p>
+          <p><strong>Município:</strong> ${municipio}</p>
+          <p><strong>Cargo:</strong> ${cargo || '-'}</p>
 
-        <p>Atenciosamente,<br/>
-        Equipe Facilita SP Municípios</p>
+          <p>
+            Guarde esta mensagem como comprovante de confirmação.
+          </p>
+
+          <br />
+
+          <p>
+            Atenciosamente,<br />
+            <strong>Equipe Facilita SP Municípios</strong>
+          </p>
+        </div>
       `
     })
 
-    return res.status(200).json({ ok: true, result })
+    return res.status(200).json({
+      ok: true,
+      result
+    })
+
   } catch (error) {
-    return res.status(500).json({ error: error.message })
+    return res.status(500).json({
+      error: error.message
+    })
   }
 }
