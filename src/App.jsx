@@ -152,6 +152,7 @@ export default function App() {
   const [view,setSV]=useState('busca'),[search,setSR]=useState(''),[selected,setSel]=useState(null)
   const [creds,setCreds]=useState([]),[loading,setLoad]=useState(true),[error,setErr]=useState(null)
   const [nome,setNome]=useState(''),[doc,setDoc]=useState(''),[cargo,setCargo]=useState('')
+  const [telefone,setTelefone]=useState(''),[email,setEmail]=useState('')
   const [consent,setConsent]=useState(false),[submitting,setSub]=useState(false)
   const [adminPwd,setAP]=useState(''),[adminErr,setAE]=useState(false)
   const [adminSrch,setAS]=useState(''),[adminTab,setATab]=useState('presentes')
@@ -177,13 +178,13 @@ export default function App() {
   const ed=()=>setDraw(false)
   const clrSig=()=>{const cv=cvRef.current;if(cv)cv.getContext('2d').clearRect(0,0,cv.width,cv.height);setHasSig(false)}
 
-  const openForm=m=>{if(isCred(m))return;setSel(m);setNome('');setDoc('');setCargo('');setConsent(false);setHasSig(false);setSV('form');setTimeout(()=>{const cv=cvRef.current;if(cv)cv.getContext('2d').clearRect(0,0,cv.width,cv.height)},60)}
+  const openForm=m=>{if(isCred(m))return;setSel(m);setNome('');setDoc('');setCargo('');setTelefone('');setEmail('');setConsent(false);setHasSig(false);setSV('form');setTimeout(()=>{const cv=cvRef.current;if(cv)cv.getContext('2d').clearRect(0,0,cv.width,cv.height)},60)}
 
   const handleSubmit=async()=>{
-    if(!nome.trim()||!doc.trim()||!cargo.trim()||!hasSig||!consent||submitting)return
+    if(!nome.trim()||!doc.trim()||!cargo.trim()||!telefone.trim()||!email.trim()||!hasSig||!consent||submitting)return
     setSub(true)
     const assinatura=cvRef.current.toDataURL()
-    const{error}=await supabase.from('credenciamentos').insert({municipio:selected,nome:nome.trim(),documento:doc.trim(),cargo:cargo.trim(),assinatura})
+    const{error}=await supabase.from('credenciamentos').insert({municipio:selected,nome:nome.trim(),documento:doc.trim(),cargo:cargo.trim(),telefone:telefone.trim(),email:email.trim(),assinatura})
     setSub(false)
     if(error){alert('Erro: '+error.message);return}
     setSV('sucesso')
@@ -193,8 +194,8 @@ export default function App() {
   const tryAdmin=()=>{if(adminPwd===ADMIN_PASS){setSV('admin');setAE(false)}else setAE(true)}
 
   const exportCSV=()=>{
-    const bom='\uFEFF',hdr=['Município','Nome','CPF/RG','Cargo','Horário'].join(';')
-    const rows=creds.map(r=>[`"${r.municipio}"`,`"${r.nome}"`,`"${r.documento}"`,`"${r.cargo}"`,`"${new Date(r.created_at).toLocaleString('pt-BR')}"`].join(';'))
+    const bom='\uFEFF',hdr=['Município','Nome','CPF/RG','Cargo','WhatsApp','E-mail','Horário'].join(';')
+    const rows=creds.map(r=>[`"${r.municipio}"`,`"${r.nome}"`,`"${r.documento}"`,`"${r.cargo}"`,`"${r.telefone||''}"`,`"${r.email||''}"`,`"${new Date(r.created_at).toLocaleString('pt-BR')}"`].join(';'))
     const csv=bom+[hdr,...rows].join('\n'),url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}))
     const a=Object.assign(document.createElement('a'),{href:url,download:'credenciamento_facilita_sp.csv'})
     document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url)
@@ -208,7 +209,7 @@ export default function App() {
     <div style={{minHeight:'100vh',background:C.gray50}}>
       <Header subtitle="Credenciamento · 23 de junho de 2025" right={
         <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:'6px'}}>
-          <span style={{background:C.red,color:C.white,borderRadius:'20px',padding:'4px 12px',fontSize:'12px',fontWeight:'700',whiteSpace:'nowrap'}}>{creds.length} / {MUNICIPIOS.length}</span>
+          <span style={{background:C.red,color:C.white,borderRadius:'20px',padding:'4px 12px',fontSize:'12px',fontWeight:'700',whiteSpace:'nowrap'}}>{creds.length} representante{creds.length!==1?'s':''}</span>
           <button onClick={()=>{setAP('');setAE(false);setSV('adminLogin')}} style={{background:'transparent',border:'1px solid #444',color:'#aaa',borderRadius:'6px',padding:'3px 10px',fontSize:'11px',cursor:'pointer'}}>Operador</button>
         </div>
       }/>
@@ -219,7 +220,7 @@ export default function App() {
             style={{...S.inp,paddingLeft:'42px',paddingRight:search?'40px':'14px',fontSize:'17px'}}/>
           {search&&<button onClick={()=>setSR('')} style={{position:'absolute',right:'10px',top:'50%',transform:'translateY(-50%)',background:'none',border:'none',color:C.gray300,cursor:'pointer',fontSize:'24px',lineHeight:1}} aria-label="Limpar">×</button>}
         </div>
-        <p style={{fontSize:'12px',color:C.gray300,marginTop:'6px'}}>{filtered.length} município{filtered.length!==1?'s':''} · {creds.length} credenciado{creds.length!==1?'s':''}</p>
+        <p style={{fontSize:'12px',color:C.gray300,marginTop:'6px'}}>{filtered.length} município{filtered.length!==1?'s':''} · {creds.length} representante{creds.length!==1?'s':''} credenciado{creds.length!==1?'s':''}</p>
       </div>
       <div style={{padding:'12px 16px'}}>
         {filtered.length===0?(<div style={{textAlign:'center',padding:'60px 20px'}}><i className="ti ti-map-pin-off" style={{fontSize:'40px',color:C.gray300,display:'block',marginBottom:'10px'}} aria-hidden="true"/><p style={{color:C.gray500}}>Nenhum município para "<strong>{search}</strong>"</p></div>):(
@@ -243,7 +244,7 @@ export default function App() {
   )
 
   /* FORMULÁRIO */
-  if(view==='form'){const valid=nome.trim()&&doc.trim()&&cargo.trim()&&hasSig&&consent;return(
+  if(view==='form'){const valid=nome.trim()&&doc.trim()&&cargo.trim()&&telefone.trim()&&email.trim()&&hasSig&&consent;return(
     <div style={{minHeight:'100vh',background:C.gray50}}>
       <Header subtitle={selected} right={<button onClick={()=>{setSV('busca');setSel(null)}} style={{background:'transparent',border:'1px solid #444',color:'#aaa',borderRadius:'6px',padding:'6px 12px',fontSize:'13px',cursor:'pointer'}}>← Voltar</button>}/>
       <div style={{padding:'16px'}}>
@@ -256,6 +257,10 @@ export default function App() {
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px',marginBottom:'14px'}}>
             <div><label style={S.label}>CPF ou RG *</label><input value={doc} onChange={e=>setDoc(e.target.value)} placeholder="000.000.000-00" style={S.inp}/></div>
             <div><label style={S.label}>Cargo *</label><input value={cargo} onChange={e=>setCargo(e.target.value)} placeholder="Ex: Prefeito" style={S.inp}/></div>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px',marginBottom:'14px'}}>
+            <div><label style={S.label}>WhatsApp *</label><input value={telefone} onChange={e=>setTelefone(e.target.value)} placeholder="(11) 99999-9999" style={S.inp}/></div>
+            <div><label style={S.label}>E-mail *</label><input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="email@prefeitura.sp.gov.br" style={S.inp}/></div>
           </div>
           <div>
             <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'6px'}}>
@@ -330,8 +335,8 @@ export default function App() {
 
   /* PAINEL ADMIN */
   if(view==='admin'){
-    const pct=Math.round(creds.length/MUNICIPIOS.length*100)
-    const filtC=adminSrch?creds.filter(r=>norm(r.municipio).includes(norm(adminSrch))||r.nome.toLowerCase().includes(adminSrch.toLowerCase())):creds
+    const pct=Math.min(100,Math.round(creds.length/MUNICIPIOS.length*100))
+    const filtC=adminSrch?creds.filter(r=>norm(r.municipio).includes(norm(adminSrch))||r.nome.toLowerCase().includes(adminSrch.toLowerCase())||(r.telefone||'').toLowerCase().includes(adminSrch.toLowerCase())||(r.email||'').toLowerCase().includes(adminSrch.toLowerCase())):creds
     const filtP=pendentes.filter(m=>!adminSrch||norm(m).includes(norm(adminSrch)))
     return(
       <div style={{minHeight:'100vh',background:C.gray50}}>
@@ -342,7 +347,7 @@ export default function App() {
           </div>
         }/>
         <div style={{padding:'16px',display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(110px,1fr))',gap:'10px'}}>
-          {[{l:'Total',v:MUNICIPIOS.length,c:C.gray700},{l:'Credenciados',v:creds.length,c:C.red},{l:'Pendentes',v:pendentes.length,c:C.gray700},{l:'Presença',v:pct+'%',c:C.gray700}].map(({l,v,c})=>(
+          {[{l:'Municípios',v:MUNICIPIOS.length,c:C.gray700},{l:'Representantes',v:creds.length,c:C.red},{l:'Municípios na lista',v:filtered.length,c:C.gray700},{l:'Registros',v:creds.length,c:C.gray700}].map(({l,v,c})=>(
             <div key={l} style={{...S.card,padding:'12px 14px'}}>
               <p style={{fontSize:'11px',color:C.gray300,textTransform:'uppercase',letterSpacing:'0.05em',marginBottom:'4px'}}>{l}</p>
               <p style={{fontSize:'24px',fontWeight:'700',color:c}}>{v}</p>
@@ -354,7 +359,7 @@ export default function App() {
             <div style={{height:'100%',width:pct+'%',background:C.red,borderRadius:'3px',transition:'width 0.4s'}}/>
           </div>
           <div style={{display:'flex',borderBottom:`1px solid ${C.border}`,marginBottom:'14px'}}>
-            {[{id:'presentes',l:`Credenciados (${creds.length})`},{id:'pendentes',l:`Pendentes (${pendentes.length})`}].map(t=>(
+            {[{id:'presentes',l:`Credenciados (${creds.length})`},{id:'pendentes',l:`Municípios (${pendentes.length})`}].map(t=>(
               <button key={t.id} onClick={()=>setATab(t.id)}
                 style={{padding:'10px 16px',border:'none',borderBottom:adminTab===t.id?`2px solid ${C.red}`:'2px solid transparent',
                 background:'transparent',cursor:'pointer',fontSize:'13px',fontWeight:adminTab===t.id?'700':'400',
@@ -371,7 +376,7 @@ export default function App() {
             <div style={{background:C.white,borderRadius:'10px',border:`1px solid ${C.border}`,overflow:'hidden'}}>
               <div style={{overflowX:'auto'}}>
                 <table style={{width:'100%',borderCollapse:'collapse',fontSize:'13px',tableLayout:'fixed'}}>
-                  <thead><tr style={{background:C.gray50}}>{[['Município','22%'],['Nome','24%'],['CPF/RG','15%'],['Cargo','18%'],['Horário','10%'],['Ass.','11%']].map(([h,w])=>(
+                  <thead><tr style={{background:C.gray50}}>{[['Município','16%'],['Nome','18%'],['CPF/RG','12%'],['Cargo','14%'],['WhatsApp','13%'],['E-mail','17%'],['Horário','6%'],['Ass.','4%']].map(([h,w])=>(
                     <th key={h} style={{padding:'10px 12px',textAlign:'left',fontWeight:'700',color:C.gray500,borderBottom:`1px solid ${C.border}`,width:w,fontSize:'11px',textTransform:'uppercase',letterSpacing:'0.04em'}}>{h}</th>
                   ))}</tr></thead>
                   <tbody>{filtC.map((r,i)=>(
@@ -380,6 +385,8 @@ export default function App() {
                       <td style={{padding:'10px 12px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',color:C.gray700}}>{r.nome}</td>
                       <td style={{padding:'10px 12px',fontFamily:'monospace',fontSize:'11px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',color:C.gray500}}>{r.documento}</td>
                       <td style={{padding:'10px 12px',color:C.gray500,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',fontSize:'12px'}}>{r.cargo}</td>
+                      <td style={{padding:'10px 12px',fontSize:'11px',color:C.gray500,whiteSpace:'nowrap'}}>{r.telefone||'-'}</td>
+                      <td style={{padding:'10px 12px',fontSize:'11px',color:C.gray500,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{r.email||'-'}</td>
                       <td style={{padding:'10px 12px',fontSize:'11px',color:C.gray300,whiteSpace:'nowrap'}}>{new Date(r.created_at).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</td>
                       <td style={{padding:'10px 12px',textAlign:'center'}}>{r.assinatura&&<img src={r.assinatura} style={{height:'26px',maxWidth:'76px',objectFit:'contain'}} alt="ass."/>}</td>
                     </tr>
@@ -394,7 +401,7 @@ export default function App() {
                 <span style={{fontSize:'13px',color:C.gray500}}>{m}</span>
                 <button onClick={()=>openForm(m)} style={{background:C.red,border:'none',cursor:'pointer',color:C.white,fontSize:'11px',fontWeight:'700',padding:'4px 10px',borderRadius:'5px',whiteSpace:'nowrap'}}>Credenciar</button>
               </div>))}
-              {filtP.length===0&&<p style={{color:C.gray300,textAlign:'center',padding:'40px'}}>Todos credenciados!</p>}
+              {filtP.length===0&&<p style={{color:C.gray300,textAlign:'center',padding:'40px'}}>Nenhum município encontrado.</p>}
             </div>
           )}
         </div>
