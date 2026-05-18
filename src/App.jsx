@@ -187,6 +187,29 @@ export default function App() {
     const{error}=await supabase.from('credenciamentos').insert({municipio:selected,nome:nome.trim(),documento:doc.trim(),cargo:cargo.trim(),telefone:telefone.trim(),email:email.trim(),assinatura})
     setSub(false)
     if(error){alert('Erro: '+error.message);return}
+
+    try {
+      const emailResponse = await fetch('/api/send-confirmation', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          nome: nome.trim(),
+          email: email.trim(),
+          municipio: selected,
+          cargo: cargo.trim()
+        })
+      })
+
+      if (!emailResponse.ok) {
+        const emailError = await emailResponse.json().catch(() => null)
+        console.error('Erro ao enviar e-mail:', emailError)
+      }
+    } catch (e) {
+      console.error('Erro ao enviar e-mail:', e)
+    }
+
     setSV('sucesso')
     setTimeout(()=>{setSV('busca');setSR('');setSel(null)},5000)
   }
