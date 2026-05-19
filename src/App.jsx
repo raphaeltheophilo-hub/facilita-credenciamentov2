@@ -253,8 +253,9 @@ export default function App() {
             style={{...S.inp,paddingLeft:'42px',paddingRight:search?'40px':'14px',fontSize:'17px'}}/>
           {search&&<button onClick={()=>setSR('')} style={{position:'absolute',right:'10px',top:'50%',transform:'translateY(-50%)',background:'none',border:'none',color:C.gray300,cursor:'pointer',fontSize:'24px',lineHeight:1}} aria-label="Limpar">×</button>}
         </div>
-        <p style={{fontSize:'12px',color:C.gray300,marginTop:'6px'}}>{filtered.length} município{filtered.length!==1?'s':''} · {creds.length} representante{creds.length!==1?'s':''} credenciado{creds.length!==1?'s':''}</p>
-      </div>
+        <p style={{fontSize:'14px',color:C.gray300}}>
+  Selecione um município para iniciar o credenciamento.
+</p>
       <div style={{padding:'12px 16px'}}>
         {filtered.length===0?(<div style={{textAlign:'center',padding:'60px 20px'}}><i className="ti ti-map-pin-off" style={{fontSize:'40px',color:C.gray300,display:'block',marginBottom:'10px'}} aria-hidden="true"/><p style={{color:C.gray500}}>Nenhum município para "<strong>{search}</strong>"</p></div>):(
           <div style={{display:'flex',flexDirection:'column',gap:'8px'}}>
