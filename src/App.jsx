@@ -114,34 +114,39 @@ const MUNICIPIOS = [
 ]
 
 const C = {
-  black:'#111111', red:'#CC0000', white:'#FFFFFF',
-  gray50:'#F7F7F7', gray100:'#EEEEEE', gray300:'#CCCCCC',
-  gray500:'#888888', gray700:'#333333', border:'#DDDDDD',
+  black:'#020713', navy:'#07101F', navy2:'#0B1424', red:'#FF1F2D', redDark:'#C40013', white:'#FFFFFF',
+  gray50:'#08111F', gray100:'#101A2A', gray300:'#9AA4B2',
+  gray500:'#D9DEE7', gray700:'#FFFFFF', border:'rgba(255,255,255,0.16)',
+  muted:'rgba(255,255,255,0.68)', bg:'linear-gradient(180deg,#030712 0%,#07101F 42%,#020713 100%)',
+  card:'rgba(8,17,31,0.92)', card2:'rgba(15,26,42,0.92)'
 }
 const ADMIN_PASS = import.meta.env.VITE_ADMIN_PASSWORD || 'facilita'
 
 const S = {
-  inp:{width:'100%',fontSize:'16px',padding:'12px 14px',borderRadius:'8px',
-    border:`1px solid ${C.border}`,boxSizing:'border-box',background:C.white,color:C.gray700,WebkitAppearance:'none'},
-  label:{display:'block',fontSize:'12px',fontWeight:'600',color:C.gray500,marginBottom:'6px',
-    textTransform:'uppercase',letterSpacing:'0.05em'},
-  btnP:{width:'100%',padding:'15px',borderRadius:'8px',border:'none',background:C.red,
-    color:C.white,fontSize:'15px',fontWeight:'700',cursor:'pointer'},
-  btnS:{width:'100%',padding:'14px',borderRadius:'8px',border:`1px solid ${C.border}`,
-    background:'transparent',color:C.gray500,fontSize:'14px',cursor:'pointer'},
-  card:{background:C.white,borderRadius:'10px',border:`1px solid ${C.border}`,padding:'20px'},
+  inp:{width:'100%',fontSize:'16px',padding:'12px 14px',borderRadius:'10px',
+    border:`1px solid ${C.border}`,boxSizing:'border-box',background:'rgba(255,255,255,0.96)',color:'#111827',WebkitAppearance:'none',outline:'none'},
+  label:{display:'block',fontSize:'12px',fontWeight:'800',color:C.gray300,marginBottom:'6px',
+    textTransform:'uppercase',letterSpacing:'0.08em'},
+  btnP:{width:'100%',padding:'15px',borderRadius:'10px',border:'none',background:C.red,
+    color:C.white,fontSize:'15px',fontWeight:'900',cursor:'pointer',boxShadow:'0 12px 30px rgba(255,31,45,0.24)'},
+  btnS:{width:'100%',padding:'14px',borderRadius:'10px',border:`1px solid ${C.border}`,
+    background:'rgba(255,255,255,0.04)',color:C.gray500,fontSize:'14px',cursor:'pointer'},
+  card:{background:C.card,borderRadius:'16px',border:`1px solid ${C.border}`,padding:'20px',boxShadow:'0 18px 50px rgba(0,0,0,0.28)'},
+  pill:{background:C.red,color:C.white,borderRadius:'0 18px 18px 0',padding:'10px 18px',fontSize:'22px',fontWeight:'900',letterSpacing:'0.02em',display:'inline-block',textTransform:'uppercase'},
 }
 
 function Header({subtitle,right}) {
   return (
-    <div style={{background:C.black}}>
-      <div style={{padding:'12px 16px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-        <img src={LOGO_SRC} alt="Facilita SP Municípios" style={{height:'46px',display:'block'}}/>
+    <div style={{background:'rgba(2,7,19,0.96)',borderBottom:`1px solid ${C.border}`,position:'relative',overflow:'hidden'}}>
+      <div style={{position:'absolute',right:'-60px',top:'-90px',width:'220px',height:'220px',border:`18px solid ${C.red}`,borderRadius:'60px',opacity:0.75}} />
+      <div style={{position:'absolute',left:'-90px',bottom:'-110px',width:'220px',height:'160px',border:`14px solid ${C.red}`,borderRadius:'55px',opacity:0.28}} />
+      <div style={{padding:'14px 18px',display:'flex',alignItems:'center',justifyContent:'space-between',position:'relative',zIndex:1}}>
+        <img src={LOGO_SRC} alt="Facilita SP Municípios" style={{height:'48px',display:'block'}}/>
         {right}
       </div>
       {subtitle && (
-        <div style={{background:'#1c1c1c',padding:'8px 16px',borderTop:'1px solid #2a2a2a'}}>
-          <p style={{color:'#aaa',fontSize:'12px',margin:0}}>{subtitle}</p>
+        <div style={{background:'rgba(255,255,255,0.04)',padding:'9px 18px',borderTop:`1px solid ${C.border}`,position:'relative',zIndex:1}}>
+          <p style={{color:C.gray500,fontSize:'12px',fontWeight:'700',margin:0,letterSpacing:'0.04em',textTransform:'uppercase'}}>{subtitle}</p>
         </div>
       )}
     </div>
@@ -229,14 +234,19 @@ export default function App() {
 
   /* BUSCA */
   if(view==='busca')return(
-    <div style={{minHeight:'100vh',background:C.gray50}}>
+    <div style={{minHeight:'100vh',background:C.bg}}>
       <Header subtitle="Credenciamento · 23 de junho de 2025" right={
         <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:'6px'}}>
-          <span style={{background:C.red,color:C.white,borderRadius:'20px',padding:'4px 12px',fontSize:'12px',fontWeight:'700',whiteSpace:'nowrap'}}>{creds.length} representante{creds.length!==1?'s':''}</span>
+          <span style={{background:C.red,color:C.white,borderRadius:'18px',padding:'6px 14px',fontSize:'12px',fontWeight:'900',whiteSpace:'nowrap'}}>{creds.length} representante{creds.length!==1?'s':''}</span>
           <button onClick={()=>{setAP('');setAE(false);setSV('adminLogin')}} style={{background:'transparent',border:'1px solid #444',color:'#aaa',borderRadius:'6px',padding:'3px 10px',fontSize:'11px',cursor:'pointer'}}>Operador</button>
         </div>
       }/>
-      <div style={{background:C.white,padding:'12px 16px',position:'sticky',top:0,zIndex:10,borderBottom:`1px solid ${C.border}`}}>
+      <div style={{padding:'22px 16px 12px',position:'relative',overflow:'hidden'}}>
+        <div style={{position:'absolute',right:'24px',top:'18px',width:'110px',height:'110px',border:`10px solid ${C.red}`,borderRadius:'28px',opacity:0.28}} />
+        <span style={S.pill}>Credenciamento</span>
+        <p style={{color:C.gray500,fontSize:'14px',margin:'12px 0 0',maxWidth:'620px'}}>Selecione o município e registre os dados do representante para o evento Facilita SP Municípios.</p>
+      </div>
+      <div style={{background:'rgba(2,7,19,0.92)',backdropFilter:'blur(10px)',padding:'14px 16px',position:'sticky',top:0,zIndex:10,borderBottom:`1px solid ${C.border}`}}>
         <div style={{position:'relative'}}>
           <i className="ti ti-search" style={{position:'absolute',left:'12px',top:'50%',transform:'translateY(-50%)',fontSize:'18px',color:C.gray300}} aria-hidden="true"/>
           <input type="text" placeholder="Buscar seu município..." value={search} onChange={e=>setSR(e.target.value)} autoFocus
@@ -251,7 +261,7 @@ export default function App() {
             {filtered.map(m=>{const done=isCred(m);return(
               <button key={m} onClick={()=>!done&&openForm(m)}
                 style={{padding:'14px 16px',borderRadius:'8px',cursor:done?'default':'pointer',
-                  border:`1px solid ${done?C.gray300:C.border}`,background:done?C.gray100:C.white,
+                  border:`1px solid ${done?C.gray300:C.border}`,background:done?'rgba(255,255,255,0.06)':C.card,
                   display:'flex',alignItems:'center',justifyContent:'space-between',textAlign:'left',width:'100%'}}>
                 <span style={{fontSize:'14px',fontWeight:'600',color:done?C.gray500:C.gray700}}>{m}</span>
                 {done
@@ -268,11 +278,11 @@ export default function App() {
 
   /* FORMULÁRIO */
   if(view==='form'){const valid=nome.trim()&&doc.trim()&&cargo.trim()&&telefone.trim()&&email.trim()&&hasSig&&consent;return(
-    <div style={{minHeight:'100vh',background:C.gray50}}>
+    <div style={{minHeight:'100vh',background:C.bg}}>
       <Header subtitle={selected} right={<button onClick={()=>{setSV('busca');setSel(null)}} style={{background:'transparent',border:'1px solid #444',color:'#aaa',borderRadius:'6px',padding:'6px 12px',fontSize:'13px',cursor:'pointer'}}>← Voltar</button>}/>
       <div style={{padding:'16px'}}>
         <div style={S.card}>
-          <p style={{fontSize:'16px',fontWeight:'700',color:C.gray700,marginBottom:'20px'}}>Dados do representante</p>
+          <div style={{margin:'-20px -20px 20px -20px',padding:'18px 20px',borderBottom:`1px solid ${C.border}`}}><span style={S.pill}>Dados do representante</span></div>
           <div style={{marginBottom:'14px'}}>
             <label style={S.label}>Nome completo *</label>
             <input value={nome} onChange={e=>setNome(e.target.value)} placeholder="Nome completo" style={S.inp} autoFocus/>
@@ -334,7 +344,7 @@ export default function App() {
           </div>
         </div>
 
-        <div style={{...S.card,marginTop:'12px',background:'#fafafa'}}>
+        <div style={{...S.card,marginTop:'12px',background:C.card2}}>
           <label style={{display:'flex',gap:'12px',alignItems:'flex-start',cursor:'pointer'}}>
             <input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)}
               style={{width:'22px',height:'22px',marginTop:'1px',flexShrink:0,accentColor:C.red}}/>
@@ -358,11 +368,11 @@ export default function App() {
 
   /* SUCESSO */
   if(view==='sucesso')return(
-    <div style={{minHeight:'100vh',background:C.gray50}}>
+    <div style={{minHeight:'100vh',background:C.bg}}>
       <Header/>
       <div style={{display:'flex',alignItems:'center',justifyContent:'center',minHeight:'calc(100vh - 70px)',padding:'40px 20px'}}>
         <div style={{textAlign:'center',maxWidth:'320px'}}>
-          <div style={{width:'80px',height:'80px',borderRadius:'50%',background:C.black,display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px'}}>
+          <div style={{width:'80px',height:'80px',borderRadius:'50%',background:C.red,display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px'}}>
             <i className="ti ti-check" style={{fontSize:'40px',color:C.white}} aria-hidden="true"/>
           </div>
           <p style={{fontSize:'22px',fontWeight:'700',color:C.gray700,marginBottom:'8px'}}>Credenciamento confirmado!</p>
@@ -375,11 +385,11 @@ export default function App() {
 
   /* LOGIN ADMIN */
   if(view==='adminLogin')return(
-    <div style={{minHeight:'100vh',background:C.gray50}}>
+    <div style={{minHeight:'100vh',background:C.bg}}>
       <Header/>
       <div style={{display:'flex',alignItems:'center',justifyContent:'center',minHeight:'calc(100vh - 70px)',padding:'20px'}}>
         <div style={{...S.card,width:'340px',maxWidth:'100%'}}>
-          <p style={{fontSize:'18px',fontWeight:'700',color:C.gray700,marginBottom:'20px'}}>Área do Operador</p>
+          <div style={{marginBottom:'20px'}}><span style={S.pill}>Área do Operador</span></div>
           <label style={S.label}>Senha</label>
           <input type="password" value={adminPwd} onChange={e=>setAP(e.target.value)} onKeyDown={e=>e.key==='Enter'&&tryAdmin()} placeholder="••••••••" style={{...S.inp,marginBottom:'6px',border:`1px solid ${adminErr?C.red:C.border}`}}/>
           {adminErr&&<p style={{fontSize:'12px',color:C.red,marginBottom:'10px'}}>Senha incorreta.</p>}
@@ -398,7 +408,7 @@ export default function App() {
     const filtC=adminSrch?creds.filter(r=>norm(r.municipio).includes(norm(adminSrch))||r.nome.toLowerCase().includes(adminSrch.toLowerCase())||(r.telefone||'').toLowerCase().includes(adminSrch.toLowerCase())||(r.email||'').toLowerCase().includes(adminSrch.toLowerCase())):creds
     const filtP=pendentes.filter(m=>!adminSrch||norm(m).includes(norm(adminSrch)))
     return(
-      <div style={{minHeight:'100vh',background:C.gray50}}>
+      <div style={{minHeight:'100vh',background:C.bg}}>
         <Header subtitle="Painel administrativo · tempo real" right={
           <div style={{display:'flex',gap:'8px'}}>
             <button onClick={exportCSV} style={{background:C.red,color:C.white,border:'none',borderRadius:'6px',padding:'8px 12px',cursor:'pointer',fontSize:'13px',fontWeight:'700',display:'flex',alignItems:'center',gap:'5px'}}><i className="ti ti-download" aria-hidden="true"/> CSV</button>
@@ -432,10 +442,10 @@ export default function App() {
             <input value={adminSrch} onChange={e=>setAS(e.target.value)} placeholder="Buscar..." style={{...S.inp,paddingLeft:'36px'}}/>
           </div>
           {adminTab==='presentes'&&(filtC.length===0?<p style={{color:C.gray300,textAlign:'center',padding:'40px'}}>{creds.length===0?'Nenhum credenciamento ainda.':'Nenhum resultado.'}</p>:(
-            <div style={{background:C.white,borderRadius:'10px',border:`1px solid ${C.border}`,overflow:'hidden'}}>
+            <div style={{background:C.card,borderRadius:'14px',border:`1px solid ${C.border}`,overflow:'hidden'}}>
               <div style={{overflowX:'auto'}}>
                 <table style={{width:'100%',borderCollapse:'collapse',fontSize:'13px',tableLayout:'fixed'}}>
-                  <thead><tr style={{background:C.gray50}}>{[['Município','16%'],['Nome','18%'],['CPF','12%'],['Cargo','14%'],['WhatsApp','13%'],['E-mail','17%'],['Horário','6%'],['Ass.','4%']].map(([h,w])=>(
+                  <thead><tr style={{background:C.bg}}>{[['Município','16%'],['Nome','18%'],['CPF','12%'],['Cargo','14%'],['WhatsApp','13%'],['E-mail','17%'],['Horário','6%'],['Ass.','4%']].map(([h,w])=>(
                     <th key={h} style={{padding:'10px 12px',textAlign:'left',fontWeight:'700',color:C.gray500,borderBottom:`1px solid ${C.border}`,width:w,fontSize:'11px',textTransform:'uppercase',letterSpacing:'0.04em'}}>{h}</th>
                   ))}</tr></thead>
                   <tbody>{filtC.map((r,i)=>(
