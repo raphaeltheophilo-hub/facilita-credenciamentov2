@@ -216,7 +216,7 @@ export default function App() {
     }
 
     setSV('sucesso')
-    setTimeout(()=>{setSV('busca');setSR('');setSel(null)},5000)
+    setTimeout(()=>{setSV('busca');setSR('');setSel(null)},30000)
   }
 
   const tryAdmin=()=>{if(adminPwd===ADMIN_PASS){setSV('admin');setAE(false)}else setAE(true)}
@@ -368,16 +368,76 @@ export default function App() {
 
   /* SUCESSO */
   if(view==='sucesso')return(
-    <div style={{minHeight:'100vh',background:C.bg}}>
+    <div style={{minHeight:'100vh',background:C.dark,position:'relative',overflow:'hidden'}}>
+      <div style={{position:'absolute',inset:0,background:'radial-gradient(circle at 20% 10%, rgba(204,0,0,.22), transparent 35%), radial-gradient(circle at 90% 70%, rgba(204,0,0,.14), transparent 35%)',pointerEvents:'none'}}/>
+      <div style={{position:'absolute',left:'-80px',top:'70px',width:'220px',height:'220px',border:`18px solid ${C.red}`,borderRight:'none',borderBottom:'none',borderRadius:'44px',opacity:.65,pointerEvents:'none'}}/>
+      <div style={{position:'absolute',right:'-70px',bottom:'60px',width:'220px',height:'220px',border:`18px solid ${C.red}`,borderLeft:'none',borderTop:'none',borderRadius:'44px',opacity:.65,pointerEvents:'none'}}/>
+
       <Header/>
-      <div style={{display:'flex',alignItems:'center',justifyContent:'center',minHeight:'calc(100vh - 70px)',padding:'40px 20px'}}>
-        <div style={{textAlign:'center',maxWidth:'320px'}}>
-          <div style={{width:'80px',height:'80px',borderRadius:'50%',background:C.red,display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px'}}>
-            <i className="ti ti-check" style={{fontSize:'40px',color:C.white}} aria-hidden="true"/>
+
+      <div style={{position:'relative',zIndex:1,display:'flex',alignItems:'center',justifyContent:'center',minHeight:'calc(100vh - 70px)',padding:'32px 16px'}}>
+        <div style={{width:'100%',maxWidth:'820px',background:'rgba(8,15,30,.92)',border:`1px solid ${C.red}`,borderRadius:'26px',padding:'28px',boxShadow:'0 24px 70px rgba(0,0,0,.45)'}}>
+          <div style={{display:'inline-block',background:C.red,color:C.white,borderRadius:'0 22px 22px 0',padding:'10px 22px',fontSize:'22px',fontWeight:'900',letterSpacing:'.02em',marginBottom:'22px'}}>
+            CREDENCIAMENTO CONFIRMADO
           </div>
-          <p style={{fontSize:'22px',fontWeight:'700',color:C.gray700,marginBottom:'8px'}}>Credenciamento confirmado!</p>
-          <p style={{fontSize:'16px',color:C.red,fontWeight:'700',marginBottom:'16px'}}>{selected}</p>
-          <p style={{fontSize:'14px',color:C.gray300}}>Retornando ao início em instantes...</p>
+
+          <p style={{fontSize:'16px',color:C.white,opacity:.9,lineHeight:1.6,marginBottom:'22px'}}>
+            Seu credenciamento para o evento <strong>Facilita SP Municípios</strong> foi realizado com sucesso.
+          </p>
+
+          <div style={{background:'rgba(255,255,255,.06)',border:'1px solid rgba(255,255,255,.12)',borderRadius:'18px',padding:'20px',marginBottom:'20px'}}>
+            <p style={{fontSize:'13px',textTransform:'uppercase',letterSpacing:'.08em',color:C.red,fontWeight:'900',marginBottom:'14px'}}>Dados do credenciamento</p>
+
+            <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:'14px'}}>
+              <div>
+                <p style={{fontSize:'11px',color:C.gray300,textTransform:'uppercase',letterSpacing:'.06em',marginBottom:'4px'}}>Município</p>
+                <p style={{fontSize:'16px',color:C.white,fontWeight:'700'}}>{selected}</p>
+              </div>
+
+              <div>
+                <p style={{fontSize:'11px',color:C.gray300,textTransform:'uppercase',letterSpacing:'.06em',marginBottom:'4px'}}>Nome</p>
+                <p style={{fontSize:'16px',color:C.white,fontWeight:'700'}}>{nome}</p>
+              </div>
+
+              <div>
+                <p style={{fontSize:'11px',color:C.gray300,textTransform:'uppercase',letterSpacing:'.06em',marginBottom:'4px'}}>CPF</p>
+                <p style={{fontSize:'16px',color:C.white,fontWeight:'700'}}>{doc}</p>
+              </div>
+
+              <div>
+                <p style={{fontSize:'11px',color:C.gray300,textTransform:'uppercase',letterSpacing:'.06em',marginBottom:'4px'}}>Cargo</p>
+                <p style={{fontSize:'16px',color:C.white,fontWeight:'700'}}>{cargo}</p>
+              </div>
+
+              <div>
+                <p style={{fontSize:'11px',color:C.gray300,textTransform:'uppercase',letterSpacing:'.06em',marginBottom:'4px'}}>WhatsApp</p>
+                <p style={{fontSize:'16px',color:C.white,fontWeight:'700'}}>{telefone}</p>
+              </div>
+
+              <div>
+                <p style={{fontSize:'11px',color:C.gray300,textTransform:'uppercase',letterSpacing:'.06em',marginBottom:'4px'}}>E-mail</p>
+                <p style={{fontSize:'16px',color:C.white,fontWeight:'700'}}>{email}</p>
+              </div>
+            </div>
+          </div>
+
+          <div style={{background:'rgba(204,0,0,.14)',border:'1px solid rgba(204,0,0,.45)',borderRadius:'16px',padding:'16px',marginBottom:'18px',color:C.white,lineHeight:1.6}}>
+            Um e-mail de confirmação será encaminhado para o endereço informado no cadastro.
+            Você também pode tirar um print desta tela para guardar como comprovante.
+          </div>
+
+          <p style={{fontSize:'13px',color:C.gray300,marginBottom:'22px'}}>
+            Esta tela permanecerá visível por aproximadamente 30 segundos antes de retornar ao início.
+          </p>
+
+          <div style={{display:'flex',gap:'12px',flexWrap:'wrap'}}>
+            <button onClick={()=>window.print()} style={{...S.btnP,width:'auto',padding:'14px 22px'}}>
+              Imprimir / Salvar PDF
+            </button>
+            <button onClick={()=>{setSV('busca');setSR('');setSel(null)}} style={{...S.btnS,width:'auto',padding:'14px 22px',color:C.white,border:'1px solid rgba(255,255,255,.25)'}}>
+              Voltar ao início
+            </button>
+          </div>
         </div>
       </div>
     </div>
