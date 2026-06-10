@@ -229,7 +229,7 @@ const Header = ({ subtitle, right }) => (
       border:'10px solid rgba(232,0,28,0.20)', borderRadius:'36px', pointerEvents:'none' }}/>
     <div style={{ padding:'14px 18px', display:'flex', alignItems:'center',
       justifyContent:'space-between', position:'relative', zIndex:1 }}>
-      <img src={LOGO_SRC} alt="Facilita SP Municípios" style={{ height:'44px', display:'block' }}/>
+      <img src={LOGO_SRC} alt="Facilita SP Municípios" style={{ height:'70px', display:'block' }}/>
       {right}
     </div>
     {subtitle && (
@@ -345,7 +345,7 @@ export default function App() {
   if(view==='busca')return(
     <div style={{minHeight:'100vh',background:T.bgPage}}>
       <style>{G}</style>
-      <Header subtitle="Credenciamento · 23 de junho de 2025" right={
+      <Header subtitle="Credenciamento · 02 de julho de 2026" right={
         <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:'7px'}}>
           <Badge>{creds.length} credenciamento{creds.length!==1?'s':''}</Badge>
           <button onClick={()=>{setAP('');setAE(false);setSV('adminLogin')}}
@@ -360,8 +360,6 @@ export default function App() {
       <div style={{padding:'24px 18px 14px',position:'relative',overflow:'hidden'}}>
         <div style={{position:'absolute',right:'20px',top:'12px',width:'90px',height:'90px',
           border:`8px solid rgba(232,0,28,0.22)`,borderRadius:'22px',pointerEvents:'none'}}/>
-        <p style={{fontSize:'10px',fontWeight:'800',color:T.red,letterSpacing:'0.14em',
-          textTransform:'uppercase',marginBottom:'8px'}}>Facilita SP Municípios · Evento 23/06</p>
         <h1 style={{fontSize:'22px',fontWeight:'900',color:'#fff',lineHeight:1.25,marginBottom:'8px'}}>
           Credenciamento<br/>
           <span style={{color:T.red}}>Online</span>
