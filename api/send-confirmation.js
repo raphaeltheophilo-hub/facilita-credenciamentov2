@@ -67,7 +67,7 @@ export default async function handler(req, res) {
               Olá, ${nome}!
             </p>
             <p style="margin:0 0 28px;font-size:14px;color:#4A5568;line-height:1.7;font-family:'Poppins','Helvetica Neue',Arial,sans-serif;">
-              Seu credenciamento para o evento <strong style="color:#111111;font-weight:600;">Facilita SP Municípios</strong>
+              Seu credenciamento para o evento <strong style="color:#111111;font-weight:600;">Reconhecimento Facilita SP Municípios</strong>
               foi registrado com sucesso. Guarde este e-mail como comprovante.
             </p>
 
