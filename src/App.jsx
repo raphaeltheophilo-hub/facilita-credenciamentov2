@@ -300,6 +300,12 @@ export default function App() {
     const{error} = await supabase.from('credenciamentos').insert({municipio:selected,nome:nome.trim(),documento:doc.trim(),cargo:cargo.trim(),telefone:telefone.trim(),email:email.trim(),assinatura})
     setSub(false)
     if(error){alert('Erro: '+error.message);return}
+    // Enviar e-mail de confirmação (não bloqueia o fluxo)
+    fetch('/api/send-confirmation',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({nome:nome.trim(),email:email.trim(),municipio:selected,cargo:cargo.trim(),telefone:telefone.trim()})
+    }).catch(e=>console.error('Email error:',e))
     setSV('sucesso')
     setTimeout(()=>{ setSV('busca'); setSR(''); setSel(null) },30000)
   }
@@ -339,7 +345,7 @@ export default function App() {
   if(view==='busca')return(
     <div style={{minHeight:'100vh',background:T.bgPage}}>
       <style>{G}</style>
-      <Header subtitle="Credenciamento · 02 de julho de 2026" right={
+      <Header subtitle="Credenciamento · 23 de junho de 2025" right={
         <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:'7px'}}>
           <Badge>{creds.length} credenciamento{creds.length!==1?'s':''}</Badge>
           <button onClick={()=>{setAP('');setAE(false);setSV('adminLogin')}}
