@@ -339,7 +339,7 @@ export default function App() {
   if(view==='busca')return(
     <div style={{minHeight:'100vh',background:T.bgPage}}>
       <style>{G}</style>
-      <Header subtitle="Credenciamento · 23 de junho de 2025" right={
+      <Header subtitle="Credenciamento · 02 de julho de 2026" right={
         <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:'7px'}}>
           <Badge>{creds.length} credenciamento{creds.length!==1?'s':''}</Badge>
           <button onClick={()=>{setAP('');setAE(false);setSV('adminLogin')}}
