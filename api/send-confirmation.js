@@ -136,7 +136,7 @@ export default async function handler(req, res) {
               <tr>
                 <td style="padding:20px 24px;">
                   <p style="margin:0 0 4px;font-size:10px;font-weight:800;color:#E8001C;text-transform:uppercase;letter-spacing:0.10em;">Informações do Evento</p>
-                  <p style="margin:0;font-size:15px;font-weight:700;color:#FFFFFF;">Entrega de Selos Facilita SP</p>
+                  <p style="margin:0;font-size:15px;font-weight:700;color:#FFFFFF;">Reconhecimento Facilita SP Municípios</p>
                   <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.65);">
                     📅 02 de julho de 2026 &nbsp;·&nbsp; 📍 Auditório CDI USP
                   </p>
